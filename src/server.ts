@@ -1,11 +1,14 @@
 import app from "./app";
-import { pool } from "./config/database";
+import { pool, initDatabase } from "./config/database";
 
 const PORT = process.env.PORT || 3000;
 
-app.listen(PORT, () => {
-  console.log(`Server running on http://localhost:${PORT}`);
-  console.log(`Documentation available on http://localhost:${PORT}/docs`);
+// Initialize database and then start server
+initDatabase().then(() => {
+  app.listen(PORT, () => {
+    console.log(`Server running on http://localhost:${PORT}`);
+    console.log(`Documentation available on http://localhost:${PORT}/docs`);
+  });
 });
 
 // Check database connection on startup

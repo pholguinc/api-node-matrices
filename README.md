@@ -94,6 +94,74 @@ Accede a la documentación interactiva en: `http://localhost:3000/docs`
 
 ## Endpoints
 
-- `POST /api/auth/register`: Registro de usuario.
-- `POST /api/auth/login`: Login y obtención de JWT.
-- `POST /api/matrix/stats`: Estadísticas de matrices (Requiere Bearer Token).
+### 1. Registro de Usuario
+**POST** `/api/auth/register`
+
+**Request Body:**
+```json
+{
+  "username": "usuario123",
+  "password": "mi_password_segura"
+}
+```
+
+**Response (201):**
+```json
+{
+  "message": "User created successfully",
+  "user": {
+    "id": "uuid-generado",
+    "username": "usuario123"
+  }
+}
+```
+
+### 2. Login
+**POST** `/api/auth/login`
+
+**Request Body:**
+```json
+{
+  "username": "usuario123",
+  "password": "mi_password_segura"
+}
+```
+
+**Response (200):**
+```json
+{
+  "message": "Login successful",
+  "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+}
+```
+
+### 3. Estadísticas de Matrices
+**POST** `/api/matrix/stats`
+*Requiere Header:* `Authorization: Bearer <token>`
+
+**Request Body:**
+```json
+{
+  "status": 200,
+  "message": "Factorización QR completada",
+  "data": {
+    "q": [[0.894427, -0.447213], [0.447213, 0.894427]],
+    "r": [[13.416407, 29.069155], [0, 172.177234]]
+  }
+}
+```
+
+**Response (200):**
+```json
+{
+  "status": 200,
+  "message": "Estadísticas calculadas exitosamente",
+  "data": {
+    "max": 172.177234,
+    "min": -0.447213,
+    "avg": 35.765636,
+    "sum": 214.593816,
+    "isDiagonal": false
+  }
+}
+```

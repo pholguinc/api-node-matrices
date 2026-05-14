@@ -31,3 +31,23 @@ export const pool = new Pool({
  * @see {@link webcrypto.AeadParams}
  */
 export const query = (text: string, params?: unknown[]) => pool.query(text, params);
+
+/**
+ * Initializes the database tables if they do not exist.
+ */
+export const initDatabase = async () => {
+  const createUsersTable = `
+    CREATE TABLE IF NOT EXISTS users (
+      id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
+      username VARCHAR(255) UNIQUE NOT NULL,
+      password VARCHAR(255) NOT NULL,
+      "createdAt" TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    );
+  `;
+  try {
+    await query(createUsersTable);
+    console.log("Database tables initialized successfully");
+  } catch (error) {
+    console.error("Error initializing database tables:", error);
+  }
+};

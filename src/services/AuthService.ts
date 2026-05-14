@@ -34,8 +34,9 @@ export class AuthService {
     if (!isPasswordValid) return null;
 
     const secret = process.env.JWT_SECRET!;
-    const expiresIn = process.env
-      .JWT_EXPIRES_IN as jwt.SignOptions["expiresIn"];
+    const expiresIn = process.env.JWT_EXPIRES_IN as NonNullable<
+      Parameters<typeof jwt.sign>[2]
+    >["expiresIn"];
 
     return jwt.sign({ id: user.id, username: user.username }, secret, {
       expiresIn,

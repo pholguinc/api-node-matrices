@@ -3,6 +3,9 @@ import app from "../src/app";
 import { UserRepository } from "../src/repositories/UserRepository";
 import bcrypt from "bcryptjs";
 
+jest.mock("@scalar/express-api-reference", () => ({
+  apiReference: jest.fn(() => (req: unknown, res: unknown, next: () => void) => next()),
+}));
 jest.mock("../src/repositories/UserRepository");
 jest.mock("bcryptjs");
 

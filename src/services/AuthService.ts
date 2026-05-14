@@ -4,12 +4,25 @@ import { User } from "../models/User";
 import { UserRepository } from "../repositories/UserRepository";
 
 export class AuthService {
+  /**
+   * @async
+   * @description Registra un nuevo usuario
+   * @param {string} username - Nombre de usuario
+   * @param {string} password - Contraseña
+   * @returns {Promise<User>} - Usuario registrado
+   */
   public async register(username: string, password: string): Promise<User> {
     const hashedPassword = await bcrypt.hash(password, 10);
-    const user = UserRepository.create({ username, password: hashedPassword });
-    return await UserRepository.save(user);
+    return await UserRepository.create({ username, password: hashedPassword });
   }
 
+  /**
+   * @async
+   * @description Inicia sesión
+   * @param {string} username - Nombre de usuario
+   * @param {string} password - Contraseña
+   * @returns {Promise<string | null>} - Token de autenticación o null
+   */
   public async login(
     username: string,
     password: string,
@@ -21,7 +34,8 @@ export class AuthService {
     if (!isPasswordValid) return null;
 
     const secret = process.env.JWT_SECRET!;
-    const expiresIn = process.env.JWT_EXPIRES_IN as jwt.SignOptions["expiresIn"];
+    const expiresIn = process.env
+      .JWT_EXPIRES_IN as jwt.SignOptions["expiresIn"];
 
     return jwt.sign({ id: user.id, username: user.username }, secret, {
       expiresIn,

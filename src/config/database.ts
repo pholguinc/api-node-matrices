@@ -1,20 +1,32 @@
-import "reflect-metadata";
-import { DataSource } from "typeorm";
-import { User } from "../models/User";
+import { Pool } from "pg";
 import dotenv from "dotenv";
 
 dotenv.config();
 
-export const AppDataSource = new DataSource({
-  type: "postgres",
-  host: process.env.DB_HOST || "localhost",
-  port: Number(process.env.DB_PORT) || 5432,
-  username: process.env.DB_USER || "user_admin",
-  password: process.env.DB_PASSWORD || "password123",
-  database: process.env.DB_NAME || "matrices_db",
-  synchronize: true, // Only for development
-  logging: false,
-  entities: [User],
-  migrations: [],
-  subscribers: [],
+/**
+ * Parámetros de las variables de entorno de conexión a la base de datos
+ * @property {string} DB_HOST - Host de la base de datos
+ * @property {number} DB_PORT - Puerto de la base de datos
+ * @property {string} DB_USER - Usuario de la base de datos
+ * @property {string} DB_PASSWORD - Contraseña de la base de datos
+ * @property {string} DB_NAME - Nombre de la base de datos
+ * @property {string} JWT_SECRET - Secreto para firmar JWTs
+ * @property {string} JWT_EXPIRES_IN - Tiempo de expiración de JWTs
+ */
+
+export const pool = new Pool({
+  host: process.env.DB_HOST,
+  port: Number(process.env.DB_PORT),
+  user: process.env.DB_USER,
+  password: process.env.DB_PASSWORD,
+  database: process.env.DB_NAME,
 });
+
+/**
+ * Executes a SQL query using the connection pool.
+ *
+ * @param text - The SQL query string.
+ * @param params - Optional parameters for the query.
+ * @see {@link webcrypto.AeadParams}
+ */
+export const query = (text: string, params?: unknown[]) => pool.query(text, params);

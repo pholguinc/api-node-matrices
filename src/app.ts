@@ -2,7 +2,7 @@ import express from "express";
 import cors from "cors";
 import dotenv from "dotenv";
 import routes from "./routes";
-import { AppDataSource } from "./config/database";
+import { pool } from "./config/database";
 import { apiReference } from "@scalar/express-api-reference";
 import swaggerJsdoc from "swagger-jsdoc";
 
@@ -20,7 +20,8 @@ const swaggerOptions = {
     info: {
       title: "Matrix Stats API",
       version: "1.0.0",
-      description: "API for calculating statistics on QR factorization matrices",
+      description:
+        "API for calculating statistics on QR factorization matrices",
     },
     components: {
       securitySchemes: {
@@ -44,21 +45,24 @@ app.use(
     spec: {
       content: swaggerSpec,
     },
-  })
+  }),
 );
 
 app.use("/api", routes);
 
 const PORT = process.env.PORT || 3000;
 
-AppDataSource.initialize()
-  .then(() => {
+app.listen(PORT, () => {
+  console.log(`Server running on http://localhost:${PORT}`);
+  console.log(`Documentation available on http://localhost:${PORT}/docs`);
+});
+
+pool.query("SELECT NOW()", (err) => {
+  if (err) {
+    console.error("Database connection error:", err);
+  } else {
     console.log("Database connected successfully");
-    app.listen(PORT, () => {
-      console.log(`Server running on http://localhost:${PORT}`);
-      console.log(`Documentation available on http://localhost:${PORT}/docs`);
-    });
-  })
-  .catch((error: unknown) => console.log("Database connection error:", error));
+  }
+});
 
 export default app;

@@ -11,22 +11,21 @@ const matrixController = new MatrixController();
  * @openapi
  * /auth/register:
  *   post:
- *     summary: Register a new user
+ *     summary: Registrar Usuario
  *     tags: [Auth]
  *     requestBody:
  *       required: true
  *       content:
  *         application/json:
  *           schema:
- *             type: object
- *             properties:
- *               username:
- *                 type: string
- *               password:
- *                 type: string
+ *             $ref: '#/components/schemas/RegisterRequest'
  *     responses:
  *       201:
  *         description: User created
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/AuthResponse'
  */
 router.post("/auth/register", authController.register);
 
@@ -34,22 +33,21 @@ router.post("/auth/register", authController.register);
  * @openapi
  * /auth/login:
  *   post:
- *     summary: Login and get JWT token
+ *     summary: Login JWT
  *     tags: [Auth]
  *     requestBody:
  *       required: true
  *       content:
  *         application/json:
  *           schema:
- *             type: object
- *             properties:
- *               username:
- *                 type: string
- *               password:
- *                 type: string
+ *             $ref: '#/components/schemas/LoginRequest'
  *     responses:
  *       200:
  *         description: Token generated
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/AuthResponse'
  */
 router.post("/auth/login", authController.login);
 
@@ -57,7 +55,7 @@ router.post("/auth/login", authController.login);
  * @openapi
  * /matrix/stats:
  *   post:
- *     summary: Calculate stats for QR factorization matrices
+ *     summary: Calcular Estadísticas de una Matriz
  *     tags: [Matrix]
  *     security:
  *       - bearerAuth: []
@@ -66,30 +64,14 @@ router.post("/auth/login", authController.login);
  *       content:
  *         application/json:
  *           schema:
- *             type: object
- *             properties:
- *               status:
- *                 type: integer
- *               message:
- *                 type: string
- *               data:
- *                 type: object
- *                 properties:
- *                   q:
- *                     type: array
- *                     items:
- *                       type: array
- *                       items:
- *                         type: number
- *                   r:
- *                     type: array
- *                     items:
- *                       type: array
- *                       items:
- *                         type: number
+ *             $ref: '#/components/schemas/MatrixStatsRequest'
  *     responses:
  *       200:
  *         description: Stats calculated
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/MatrixStatsResponse'
  */
 router.post("/matrix/stats", authMiddleware, matrixController.calculateStats);
 

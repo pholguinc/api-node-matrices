@@ -31,6 +31,73 @@ const swaggerOptions = {
           bearerFormat: "JWT",
         },
       },
+      schemas: {
+        RegisterRequest: {
+          type: "object",
+          properties: {
+            username: { type: "string" },
+            password: { type: "string" },
+          },
+        },
+        LoginRequest: {
+          type: "object",
+          properties: {
+            username: { type: "string" },
+            password: { type: "string" },
+          },
+        },
+        AuthResponse: {
+          type: "object",
+          properties: {
+            message: { type: "string" },
+            token: { type: "string" },
+            user: {
+              type: "object",
+              properties: {
+                id: { type: "string" },
+                username: { type: "string" },
+              },
+            },
+          },
+        },
+        MatrixStatsRequest: {
+          type: "object",
+          properties: {
+            status: { type: "integer" },
+            message: { type: "string" },
+            data: {
+              type: "object",
+              properties: {
+                q: {
+                  type: "array",
+                  items: { type: "array", items: { type: "number" } },
+                },
+                r: {
+                  type: "array",
+                  items: { type: "array", items: { type: "number" } },
+                },
+              },
+            },
+          },
+        },
+        MatrixStatsResponse: {
+          type: "object",
+          properties: {
+            status: { type: "integer" },
+            message: { type: "string" },
+            data: {
+              type: "object",
+              properties: {
+                max: { type: "number" },
+                min: { type: "number" },
+                avg: { type: "number" },
+                sum: { type: "number" },
+                isDiagonal: { type: "boolean" },
+              },
+            },
+          },
+        },
+      },
     },
   },
   apis: ["./src/routes/*.ts"],
@@ -49,20 +116,5 @@ app.use(
 );
 
 app.use("/api", routes);
-
-const PORT = process.env.PORT || 3000;
-
-app.listen(PORT, () => {
-  console.log(`Server running on http://localhost:${PORT}`);
-  console.log(`Documentation available on http://localhost:${PORT}/docs`);
-});
-
-pool.query("SELECT NOW()", (err) => {
-  if (err) {
-    console.error("Database connection error:", err);
-  } else {
-    console.log("Database connected successfully");
-  }
-});
 
 export default app;
